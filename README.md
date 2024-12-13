@@ -12,17 +12,17 @@ El primer paso es realizar un preprocesado de los datos. Para ello, se va a empl
 - El preprocesado de la característica 'date' consiste en extraer el mes y el día en que se publicó la receta.
 
 <div style="border: 2px solid #000; padding: 10px; background-color: #f9f9f9;">
-# Date: 
-** Contenido: 2004-08-20 04:00:00+00:00
-** Contenido preprocesado: ['8', '20']
-
-# Categories: 
-** Contenido: ['Soup/Stew', 'Beef', 'Tomato', 'Celery', 'Fall', 'Simmer', 'Gourmet']
-** Contenido preprocesado: ['soup/stew', 'beef', 'tomato', 'celery', 'fall', 'simmer', 'gourmet']
-
-# Directions: 
-** Contenido: ['Whisk egg whites in a large bowl until foamy and add eggshells. Separately pulse tomatoes and celery in a food processor until coarsely chopped, then add to egg whites. Whisk in beef, salt, and peppercorns.', ...']
-** Contenido preprocesado: ['whisk', 'egg', 'white', 'large', 'bowl', 'foamy', 'add', 'eggshell', 'separately', 'pulse', 'tomato', 'celery', 'food', 'processor', 'coarsely', 'chop', 'add', 'egg', 'white', 'whisk', 'beef', 'salt', 'peppercorn', ...]
+  # Date: 
+  ** Contenido: 2004-08-20 04:00:00+00:00
+  ** Contenido preprocesado: ['8', '20']
+  
+  # Categories: 
+  ** Contenido: ['Soup/Stew', 'Beef', 'Tomato', 'Celery', 'Fall', 'Simmer', 'Gourmet']
+  ** Contenido preprocesado: ['soup/stew', 'beef', 'tomato', 'celery', 'fall', 'simmer', 'gourmet']
+  
+  # Directions: 
+  ** Contenido: ['Whisk egg whites in a large bowl until foamy and add eggshells. Separately pulse tomatoes and celery in a food processor until coarsely chopped, then add to egg whites. Whisk in beef, salt, and peppercorns.', ...']
+  ** Contenido preprocesado: ['whisk', 'egg', 'white', 'large', 'bowl', 'foamy', 'add', 'eggshell', 'separately', 'pulse', 'tomato', 'celery', 'food', 'processor', 'coarsely', 'chop', 'add', 'egg', 'white', 'whisk', 'beef', 'salt', 'peppercorn', ...]
 </div>
 
 
