@@ -97,7 +97,7 @@ La primera receta vectorizada en formato Word2Vec:
 - Los pasos para realizar la vectorización de embeddings contextuales de BERT son:
   1) Preparar el corpus de datos. A BERT hay que pasarle las recetas sin el preprocesado realizado anteriormente. El único preprocesado que se ha realizado ha sido juntar las características ```date```, ```categories``` y ```directions``` en un único string, añadiendo delante de cada una el nombre de la característica.
   2) Cargar el modelo preentrenado.
-  3) Extraer los embeddings contextuales.
+  3) Extraer los embeddings contextuales como el promedio del tensor ```last_hidden_state```.
   4) Resultado: matriz ```4000x768```, donde 4000 es el número de recetas y 768 es el tamaño del vector embeddings.
 
 ```
