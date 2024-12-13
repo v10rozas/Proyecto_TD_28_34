@@ -128,8 +128,8 @@ La hoja de ruta que se sigue para desarrollar la red neuronal es:
 1) Se parte de la red neuronal más sencilla: el perceptrón simple.
 2) Se añaden nuevas capas (lineales y no lineales) para dar mayor expresividad al modelo, obteniendo el perceptrón multicapa.
 3) Se prueban diferentes valores de tasa de aprendizaje y épocas para determinar cuál sería el valor óptimo.
-4) Se prueban técnicas vistas en clase para optimizar el modelo: 'dropout' y 'early stopping'.
-5) Trabajo futuro: se podrían aplicar otras técnicas para mejorar las prestaciones, como la inicialización de los pesos (Xavier y He), otros optimizadores (e.g., Adam), el uso de 'schedulers' para la tasa de aprendizaje, 'lasso regularization', 'ridge regularization', 'batch normalisation', 'data augmentation', etc.
+4) Se prueban técnicas vistas en clase para optimizar el modelo: ```dropout``` y ```early stopping```.
+5) Trabajo futuro: se podrían aplicar otras técnicas para mejorar las prestaciones, como la inicialización de los pesos (Xavier y He), otros optimizadores (e.g., Adam), el uso de ```schedulers``` para la tasa de aprendizaje, ```lasso regularization```, ```ridge regularization```, ```batch normalisation```, ```data augmentation```, etc.
 
 Aspectos a tener en cuenta antes de continuar:
 1) Las funciones de activación no lineales de las capas ocultas son ReLU. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), se recomienda que en los perceptrones siempre se utilice ReLU, por lo que no se prueban otras.
@@ -138,7 +138,17 @@ Aspectos a tener en cuenta antes de continuar:
 Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
 
 #### Análisis de los resultados
-Completar...
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | ~0.83             | ~0.86             | ~0.86             |
+| Perceptrón multicapa + lr=0.01    | ~0.79             | ~0.86             | ~0.85             |
+| MLP + lr=0.1                      | ~0.9              | ~0.9              | ~0.9              | 
+| MLP + lr=0.01                     | ~0.79             | ~0.86             | ~0.85             |
+| MLP + lr=0.001                    | ~0.84             | ~0.88             | ~0.88             |
+| MLP + lr=0.01 + dropout           | ~0.89             | ~0.87             | ~0.89             |
+| MLP + lr=0.01 + early stopping    | ~0.83             | ~0.85             | ~0.83             |
 
 ### Regresor k-NN
 #### Hoja de ruta
@@ -149,11 +159,11 @@ Completar...
 #### Análisis de los resultados
 Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su número óptimo de vecinos y el MAE obtenido sobre el conjunto de pruebas. Se observa que la vectorización que mejores prestaciones ofrece es embeddings, seguido de TF-IDF y Word2Vec. Además, en cuanto al número de vecinos, las vectorizaciones embeddings y Word2Vec necesitan un número menor de vecinos respecto a TF-IDF.
 
-| **Vectorización**  | **Número de vecinos óptimo** | **MAE de pruebas** |
+| **Vectorización**  | **Número de vecinos óptimo** | **MAE (pruebas)**     |
 |--------------------|------------------------------|-----------------------|
-| **Embeddings**     | 37                           | 0.81                  |
-| **TF-IDF**         | 42                           | 0.85                  |
-| **Word2Vec**       | 37                           | 0.86                  | 
+| Embeddings         | 37                           | 0.81                  |
+| TF-IDF             | 42                           | 0.85                  |
+| Word2Vec           | 37                           | 0.86                  | 
 
 #### Elección del regresor k-NN
 A la vista de los resultados, el modelo k-NN que mejores prestaciones tiene es el que utiliza la vectorización embeddings. Por un lado, es el que mejor valor de MAE de pruebas tiene. Por otro lado, es el que menor número de vecinos necesita.
