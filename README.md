@@ -138,6 +138,7 @@ Aspectos a tener en cuenta antes de continuar:
 Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
 
 #### Análisis de los resultados
+Completar...
 
 ### Regresor k-NN
 #### Hoja de ruta
@@ -160,7 +161,10 @@ A la vista de los resultados, el modelo k-NN que mejores prestaciones tiene es e
 ### Fine-tuning de BERT
 Completar...
 
-## Análisis de los resultados
+#### Análisis de los resultados
+Completar...
+
+### Red Neuronal vs k-NN vs fine-tuning
 Completar...
 
 # Extensión
