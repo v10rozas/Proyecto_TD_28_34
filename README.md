@@ -141,9 +141,9 @@ Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona
 
 ### Regresor k-NN
 #### Hoja de ruta
-- El regresor k-NN cuenta con [varios hiperparámetros](https://scikit-learn.org/1.5/modules/generated/sklearn.neighbors.KNeighborsRegressor.html). En este proyecto se analiza el valor óptimo del número de vecinos (```n_neighbors```) en un rango de 1 a 100. El motivo de elegir un rango amplio de vecinos se debe a que el número de muestras utilizadas para entrenar el regresor k-NN es elevado. El resto de los hiperparámetros mantienen sus valores por defecto.
-- El valor óptimo de ```n_neighbors``` se va a determinar mediante validación cruzada utilizando el conjunto de entrenamiento. En concreto, se aplica ```10-Fold cv```, tal y como se realizó en la práctica de regresión de la asignatura. Además, la métrica para determinar el valor óptimo de ```n_neighbors``` es el MAE (Mean Absolute Error). El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal.
-- Finalmente, tras entrenar los regresores k-NN, se va a determinar las prestaciones de cada uno hallando el MAE sobre el conjunto de pruebas.
+1) El regresor k-NN cuenta con [varios hiperparámetros](https://scikit-learn.org/1.5/modules/generated/sklearn.neighbors.KNeighborsRegressor.html). En este proyecto se analiza el valor óptimo del número de vecinos (```n_neighbors```) en un rango de 1 a 100. El motivo de elegir un rango amplio de vecinos se debe a que el número de muestras utilizadas para entrenar el regresor k-NN es elevado. El resto de los hiperparámetros mantienen sus valores por defecto.
+2) El valor óptimo de ```n_neighbors``` se va a determinar mediante validación cruzada utilizando el conjunto de entrenamiento. En concreto, se aplica ```10-Fold cv```, tal y como se realizó en la práctica de regresión de la asignatura. Además, la métrica para determinar el valor óptimo de ```n_neighbors``` es el MAE (Mean Absolute Error). El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal.
+3) Finalmente, tras entrenar los regresores k-NN, se va a determinar las prestaciones de cada uno hallando el MAE sobre el conjunto de pruebas.
 
 #### Análisis de los resultados
 Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su número óptimo de vecinos y el MAE obtenido sobre el conjunto de pruebas. Se observa que la vectorización que mejores prestaciones ofrece es embeddings, seguido de TF-IDF y Word2Vec. Además, en cuanto al número de vecinos, las vectorizaciones embeddings y Word2Vec necesitan un número menor de vecinos respecto a TF-IDF.
@@ -158,8 +158,10 @@ Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su n
 A la vista de los resultados, el modelo k-NN que mejores prestaciones tiene es el que utiliza la vectorización embeddings. Por un lado, es el que mejor valor de MAE de pruebas tiene. Por otro lado, es el que menor número de vecinos necesita.
 
 ### Fine-tuning de BERT
+Completar...
 
 ## Análisis de los resultados
+Completar...
 
 # Extensión
 La extensión que se va a implementar es: ```uso de un summarizer preentrenado (utilizando pipelines de Hugging Face) para proporcionar un resumen de la característica 'directions'```.
