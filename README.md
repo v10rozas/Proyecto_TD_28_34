@@ -2,9 +2,9 @@
 Proyecto de la asignatura Tratamiento de Datos realizado por Calin Cristian Dinga Pastae (100451528) y Víctor Díez Rozas (100451534).
 
 ## Descripción del problema y objetivos del proyecto
-El objetivo del proyecto es desarrollar un modelo de regresión que, a partir de las características de una receta de cocina (e.g., sus instrucciones), se prediga la valoración dada por un usuario.
+El objetivo del proyecto es desarrollar un modelo de regresión que, a partir de las características de una receta de cocina (e.g., sus instrucciones), prediga la valoración dada por un usuario.
 
-Las características disponibles son: instrucciones, categorías, descripción, título, cantidad de grasa, cantidad de proteínas, cantidad de calorías, cantidad de sodio, ingredientes y fecha de publicación. Para determinar qué características se deben emplear en el modelo de regresión, se analiza la relación entre la característica ``categories``` y ```rating```.
+Las características disponibles son: instrucciones, categorías, descripción, título, cantidad de grasa, cantidad de proteínas, cantidad de calorías, cantidad de sodio, ingredientes y fecha de publicación. Para determinar qué características se deben emplear en el modelo de regresión, se analiza la relación entre la característica ```categories``` y ```rating```.
 
 Los pasos para realizar el análisis son:
 1) Eliminar recetas que contengan valores nulos en ```categories``` o ```rating```.
@@ -16,14 +16,31 @@ Los pasos para realizar el análisis son:
 
 <img width="671" alt="valoracion_de_categorias" src="https://github.com/user-attachments/assets/a4ccea0f-1e5b-4a85-a72d-65385acf31ca" />
 
+La imagen anterior revela que las categorías con mejor ```rating``` están relacionadas con productos cárnicos (lamb chop, ground lamb, brisket, etc.) y con eventos/celebraciones (game, Kentucky derby, Rosh Hashanah/Yom Kippur, New Year's Day, etc.), mientras que las categorías con peor ```rating``` están relacionadas con bebidas alcohólicas (gin, bitters, spirit, alcoholic, etc.) y con otro tipo de bebidas (lime juice, tea, etc.). Entonces, se puede concluir que el modelo de regresión hay que entrenarlo con datos que contengan el tipo de alimento o de bebida, y las celebraciones.
+
+En el enunciado se indica que se debe trabajar, como mínimo, con ```directions``` y/o ```desc```. En este caso se va a utilizar ```directions```. El motivo de omitir ```desc``` es que ```directions``` ya incluye toda la información sobre la receta, por lo que ```desc``` es contenido redundante.
+
+También se encuentran las características ```ingredients``` y ```title```. La primera tendría sentido utilizarla ya que, como se ha visto en la imagen, los ingredientes son el factor más influyente en el ```rating``` (e.g., la carne está mucho mejor calificada que las bebidas). Sin embargo, se ha descartado para evitar superar el umbral máximo de tokens proporcionado por BERT<sup>[1]</sup>. La característica ```title``` no se utiliza ya que es contenido redundante; la información brindada en el título ya se incluye en las instrucciones.
+
+La característica ```categories``` sí que se utiliza porque resulta útil para predecir el ```rating```, tal y como se ha visto antes.
+
+La característica ```date``` también se utiliza ya que, como se ha visto en la imagen, las celebraciones influyen en el ```rating```. En concreto, se van a utilizar el día y el mes. Las horas, minutos, segundos, año y zona horaria no se consideran relevantes porque las festividades que se han visto se realizan todos los años, durante todo el día y en todas las regiones del planeta.
+
+Las características ```fat```, ```protein```, ```calories``` y ```sodium``` no parecen influir de manera significativa. Apenas se observan entre los valores máximos y mínimos de ```rating```. Por tanto, no se van a emplear para entrenar el modelo.
+
+<sup>[1]</sup> Entre ```ingredients``` y ```directions``` se ha decidido utilizar ```directions``` porque en el enunciado se indica que esta última es de obligado uso. Además, cabe mencionar que al descartar ```ingredients``` no se suele perder excesiva cantidad de información ya que en ```directions``` suelen aparecer los ingredientes más relevantes.
+
 ## Metodología aplicada
+Antes de seguir, es importante mencionar que se ha reducido el número de recetas empleadas a 4000 porque las 20130 recetas suponían un elevado coste computacional.
+
 ### Preprocesado de los datos
-El primer paso es realizar un preprocesado de los datos. Para ello, se va a emplear la librería SpaCy. Como se ha comentado en el apartado anterior, las características a las que se va a realizar el preprocesado son ```date```, ```categories``` y ```directions```. Sin embargo, cada una de ellas cuenta con un preprocesado diferente.
+El primer paso es realizar un preprocesado de los datos. Para ello, se va a emplear la librería SpaCy. Como se ha comentado en el apartado anterior, las características a las que se va a realizar el preprocesado son ```directions```, ```categories``` y ```date```. Sin embargo, cada una de ellas cuenta con un preprocesado diferente.
 
 - La característica ```directions``` es una lista de strings. Entonces, para cada string se va a realizar la tokenización, la homogeneización y la limpieza.
 - La característica ```categories``` es una lista de strings. Sin embargo, en lugar de realizar el mismo preprocesado que en ```directions```, solamente se realiza la conversión a minúsculas. El motivo de no realizar un preprocesado mayor es que las palabras que forman cada string ya constituyen una entidad, por lo que es conveniente mantenerlas juntas y que no pierdan información. Además, se convierten a minúsculas con el objetivo de reducir el tamaño del diccionario que se creará en el siguiente apartado.
-- La característica ```date``` proporciona el año, mes, día, hora, minutos, segundos y zona horaria. El preprocesado que se realiza consiste en extraer el mes y el día en que se publicó la receta. El resto de valores no se consideran relevantes porque las festividades que se han visto en el apartado anterior se realizan todos los años, durante todo el día y en todas las regiones del planeta.
+- La característica ```date``` proporciona el año, mes, día, hora, minutos, segundos y zona horaria. Como se ha comentado anteriormente, el preprocesado que se realiza consiste en extraer el mes y el día en que se publicó la receta.
 - El preprocesado finaliza tras juntar las tres características preprocesadas en una única lista.
+
 ```
   # Date: 
   ** Contenido: 2004-08-20 04:00:00+00:00
@@ -44,7 +61,7 @@ El primer paso es realizar un preprocesado de los datos. Para ello, se va a empl
 **Nota:** Ejemplo (recortado) de receta preprocesada.
 
 ### Vectorización de los datos
-El segundo paso es vectorizar los datos preprocesados. En concreto, se vna a realizar tres tipos de vectorización: TF-IDF, word2vec y embeddings contextuales de BERT.
+El segundo paso es vectorizar los datos preprocesados. En concreto, se van a realizar tres tipos de vectorización: TF-IDF, word2vec y embeddings contextuales de BERT.
 
 - Los pasos para realizar la vectorización de TF-IDF son:
   1) Generar el diccionario y filtrar aquellos tokens que aparezcan en menos de 4 recetas o en más del 80% de las recetas.
@@ -62,26 +79,26 @@ Los primeros cinco tokens de la primera receta en formato TF-IDF:
 ```
 **Nota:** Ejemplo (recortado) de vectorización TF-IDF.
 
-- Los pasos para realizar la vectorización word2vec son:
-  1) Entrenar el modelo word2vec aplicando el algoritmo CBoW.
-  2) Aplicar la vevgorización word2vec a cada una de las recetas preprocesadas.
-  3) Resultado: matriz ```4000x100```, donde 4000 es el número de recetas y 100 es el tamaño del vector word2vec.
+- Los pasos para realizar la vectorización Word2Vec son:
+  1) Entrenar el modelo Word2Vec aplicando el algoritmo CBoW.
+  2) Aplicar la vectorización Word2Vec a cada una de las recetas preprocesadas.
+  3) Resultado: matriz ```4000x100```, donde 4000 es el número de recetas y 100 es el tamaño del vector Word2Vec.
 
 ```
 La primera receta sin vectorizar:
 ['8', '20', 'soup/stew', 'beef', 'tomato', ..., 'season', 'salt', 'ladle', 'bowl', 'profiterole', 'garnish']
 
-La primera receta vectorizada en formato word2vec:
+La primera receta vectorizada en formato Word2Vec:
 [ 0.43711016  0.4392863  -0.04940761 -0.23191251  0.6653966   0.03018906 0.4440535   0.12933357  0.02830963
 -0.5292608   0.05647407 -0.02353401 ...  0.16899839  0.4170615  -0.02847773  0.04467263 -0.35252956]
 ```
-**Nota:** Ejemplo (recortado) de vectorización word2vec.
+**Nota:** Ejemplo (recortado) de vectorización Word2Vec.
 
 - Los pasos para realizar la vectorización de embeddings contextuales de BERT son:
-  1) Preparar el corpus de datos. A BERT hay que pasarle las recetas sin el preprocesado realizado anteriormente. El único preprocesado que se ha realizado ha sido juntar las características ```date```, ```categories``` y ```directions``` en un único string, añadiendo delante de cada una el nombre de la característica (ver ejemplo).
+  1) Preparar el corpus de datos. A BERT hay que pasarle las recetas sin el preprocesado realizado anteriormente. El único preprocesado que se ha realizado ha sido juntar las características ```date```, ```categories``` y ```directions``` en un único string, añadiendo delante de cada una el nombre de la característica.
   2) Cargar el modelo preentrenado.
   3) Extraer los embeddings contextuales.
-  4) Resultado: matriz ```4000x768```, donde 4000 es el númerode recetas y 768 es el tamaño del vector embeddings.
+  4) Resultado: matriz ```4000x768```, donde 4000 es el número de recetas y 768 es el tamaño del vector embeddings.
 
 ```
 La primera receta sin preprocesar:
