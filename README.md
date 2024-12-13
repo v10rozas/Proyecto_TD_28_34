@@ -154,39 +154,38 @@ Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona
 # Extensión
 La extensión que se va a implementar es: ```uso de un summarizer preentrenado (utilizando pipelines de Hugging Face) para proporcionar un resumen de la característica 'directions'```.
 
-En concreto, se va a probar la capacidad de resumir de tres modelos: [facebook/bart-large-cnn](https://huggingface.co/facebook/bart-large-cnn)$^{[1]}$, [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) y [DISLab/SummLlama3.2-3B](https://huggingface.co/DISLab/SummLlama3.2-3B)$^{[2]}$. Para determinar cómo de buenos son los resúmenes obtenidos, lo ideal sería compararlos con los realizados por un ser humano. Sin embargo, para optimizar el tiempo de trabajo, los resúmenes obtenidos de los tres modelos se van a comparar con los resúmenes generados por ChatGPT-4o. Además, para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan.
+En concreto, se va a probar la capacidad de resumir de tres modelos: [facebook/bart-large-cnn](https://huggingface.co/facebook/bart-large-cnn)<sup>[1]</sup>, [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) y [DISLab/SummLlama3.2-3B](https://huggingface.co/DISLab/SummLlama3.2-3B)<sup>[2]</sup>. Para determinar cómo de buenos son los resúmenes obtenidos, lo ideal sería compararlos con los realizados por un ser humano. Sin embargo, para optimizar el tiempo de trabajo, los resúmenes obtenidos de los tres modelos se van a comparar con los resúmenes generados por ChatGPT-4o. Además, para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan.
 
-[1] Se trata de un modelo con arquitectura encoder-decoder. En concreto, es el fine-tuning de [facebook/bart-large](https://huggingface.co/facebook/bart-large).
+<sup>[1]</sup> Se trata de un modelo con arquitectura encoder-decoder. En concreto, es el fine-tuning de [facebook/bart-large](https://huggingface.co/facebook/bart-large).
 
-[2] Se trata de un modelo con arquitectura decoder-only. En concreto, es el fine-tuning de [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct), que a su vez es el fine-tunning de [meta-llama/Llama-3.2-3B](https://huggingface.co/meta-llama/Llama-3.2-3B).
+<sup>[2]</sup> Se trata de un modelo con arquitectura decoder-only. En concreto, es el fine-tuning de [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct), que a su vez es el fine-tunning de [meta-llama/Llama-3.2-3B](https://huggingface.co/meta-llama/Llama-3.2-3B).
 
 ## Ejemplo
 
 ```
 INSTRUCCIONES:
-Bring 6 quarts water to a boil in pot, then plunge 2 lobsters headfirst into water and cook, covered,
-8 minutes from time they enter water. Transfer with tongs to a shallow baking pan to cool. Return water
-to a boil and cook remaining 2 lobsters in same manner. When lobsters are cool enough to handle, remove
-meat from tail and claws and set aside. Cut tail shells and lobster bodies (not including claws) into
-1-inch pieces with kitchen shears, then rinse well, discarding gills, eye sacs, tomalley, any roe, and
-claw shells. Transfer to a 6- to 8-quart heavy pot, then add wine, carrots, celery, fennel, onion, garlic,
-large tarragon sprigs, salt, fennel seeds, red-pepper flakes, and remaining 2 quarts water and bring to a
-boil. Reduce heat and simmer, uncovered, until liquid is reduced to about 6 cups, about 1 1/2 hours. While
-stock reduces, scrape any coagulated white albumin from lobster meat with a knife and cut meat into 1/2-inch
-pieces, then chill, covered. Pour stock through a dampened cheesecloth-lined large sieve into a large bowl,
-pressing on and then discarding solids. Transfer 2 3/4 cups stock to a bowl. (Cool remaining stock completely,
-uncovered, then freeze in an airtight container for another use.) Sprinkle gelatin evenly over 1/4 cup stock
-in a 1-quart saucepan, then let stand 1 minute to soften. Heat over moderately low heat, stirring, just until
-gelatin is dissolved, then stir in vinegar and remaining 2 1/2 cups stock. Put molds in a baking pan. Add 2
-teaspoons gelatin mixture to each mold and freeze until set, about 10 minutes. Put 1 small sprig of tarragon
-and a tip of claw meat in bottom of each mold, then divide lobster meat among molds. Fill with remaining
-gelatin mixture and chill, covered with plastic wrap, until set, at least 2 hours. To unmold, dip 1 mold in a
-pan of hot water 3 to 5 seconds to loosen. Run a thin knife around edge of mold and invert gelée out onto a
-plate. Repeat with remaining molds. Drizzle plates with fresh tarragon oil .
+Bring 6 quarts water to a boil in pot, then plunge 2 lobsters headfirst into water and cook, covered, 8 minutes
+from time they enter water. Transfer with tongs to a shallow baking pan to cool. Return water to a boil and cook
+remaining 2 lobsters in same manner. When lobsters are cool enough to handle, remove meat from tail and claws
+and set aside. Cut tail shells and lobster bodies (not including claws) into 1-inch pieces with kitchen shears,
+then rinse well, discarding gills, eye sacs, tomalley, any roe, and claw shells. Transfer to a 6- to 8-quart
+heavy pot, then add wine, carrots, celery, fennel, onion, garlic, large tarragon sprigs, salt, fennel seeds,
+red-pepper flakes, and remaining 2 quarts water and bring to a boil. Reduce heat and simmer, uncovered, until
+liquid is reduced to about 6 cups, about 1 1/2 hours. While stock reduces, scrape any coagulated white albumin
+from lobster meat with a knife and cut meat into 1/2-inch pieces, then chill, covered. Pour stock through a
+dampened cheesecloth-lined large sieve into a large bowl, pressing on and then discarding solids. Transfer 2 3/4
+cups stock to a bowl. (Cool remaining stock completely, uncovered, then freeze in an airtight container for
+another use.) Sprinkle gelatin evenly over 1/4 cup stock in a 1-quart saucepan, then let stand 1 minute to soften.
+Heat over moderately low heat, stirring, just until gelatin is dissolved, then stir in vinegar and remaining 2 1/2
+cups stock. Put molds in a baking pan. Add 2 teaspoons gelatin mixture to each mold and freeze until set, about 10
+minutes. Put 1 small sprig of tarragon and a tip of claw meat in bottom of each mold, then divide lobster meat
+among molds. Fill with remaining gelatin mixture and chill, covered with plastic wrap, until set, at least 2 hours.
+To unmold, dip 1 mold in a pan of hot water 3 to 5 seconds to loosen. Run a thin knife around edge of mold and
+invert gelée out onto a plate. Repeat with remaining molds. Drizzle plates with fresh tarragon oil .
 
 
 RESUMEN GENERADO POR ChatGPT-4o:
-"Boil 6 quarts of water in a pot and cook 2 lobsters for 8 minutes, then transfer to a pan to cool. Repeat with
+Boil 6 quarts of water in a pot and cook 2 lobsters for 8 minutes, then transfer to a pan to cool. Repeat with
 the remaining lobsters. Once cooled, remove the lobster meat from the tails and claws, set aside, and discard
 shells and unwanted parts. Cut the remaining shells into pieces and rinse well. In a large pot, combine the shell
 pieces with wine, vegetables, herbs, and seasonings, and simmer for about 1.5 hours until the liquid reduces.
@@ -194,7 +193,7 @@ Strain the stock through cheesecloth, reserving 2 3/4 cups for the gelée. Sprin
 and dissolve it over low heat, then add vinegar and the remaining stock. Pour the gelatin mixture into molds and
 freeze for 10 minutes. Add a sprig of tarragon and claw meat to each mold, then divide the lobster meat and fill
 with the gelatin mixture. Chill until set, about 2 hours. To unmold, dip molds in hot water briefly, run a knife
-around the edge, and invert onto plates. Drizzle with fresh tarragon oil.",
+around the edge, and invert onto plates. Drizzle with fresh tarragon oil.
     
 
 RESUMEN GENERADO POR meta-llama/Llama-3.2-3B-Instruct:
@@ -236,15 +235,15 @@ dishes.
 
 - ROUGE indica las coincidencias de tokens (o N-gramas) entre dos textos: el de referencia (resúmenes generados por ChatGPT-4o) y el de hipótesis (resúmenes generados por los otros tres modelos).
 
-- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular 'precision', 'recall' y 'f1'.
+- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular ```precision```, ```recall``` y ```F1```.
 
 <br>
 
-$$\text{Precision} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de hipótesis}}$$
+$$\text{precision} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de hipótesis}}$$
 
 <br>
 
-$$\text{Recall} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de referencia}}$$
+$$\text{recall} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de referencia}}$$
 
 <br>
 
@@ -252,14 +251,14 @@ $$\text{F1 score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{
 
 <br>
 
-- En cuanto a BLEU, los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular los tokens, bigramas y trigramas que tienen en común la referencia y la hipótesis, 3) calcular el valor de 'precision' para los tokens, bigramas y trigramas, 4) calcular una penalización basada en la longitud de los resúmenes de referencia y de hipótesis, 4) calcular BLEU como el producto de los tres valores de 'precision' y la penalización.
+- En cuanto a BLEU, los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular los tokens, bigramas y trigramas que tienen en común la referencia y la hipótesis, 3) calcular el valor de ```precision``` para los tokens, bigramas y trigramas, 4) calcular una penalización basada en la longitud de los resúmenes de referencia y de hipótesis, 4) calcular BLEU como el producto de los tres valores de ```precision``` y la penalización.
 
 - Tanto ROUGE como BLEU tienen un rango de valores de 0 a 1, donde 0 significa que el resumen de la hipótesis es de baja calidad y 1 indica que es de alta calidad.
 
 ## Análisis de los resultados
 Los resultados obtenidos se resumen en la siguiente tabla:
 
-| Modelo                           | Recetas resumidas            | ROUGE-1 Precision  | ROUGE-1 Recall | ROUGE-1 F1   | BLEU    |
+| Modelo                           | Recetas resumidas            | ROUGE-1 precision  | ROUGE-1 recall | ROUGE-1 F1   | BLEU    |
 |----------------------------------|------------------------------|--------------------|----------------|--------------|---------|
 | meta-llama/Llama-3.2-3B-Instruct | 46                           | 0.4646             | 0.4556         | 0.4540       | 0.1874  |
 | DISLab/SummLlama3.2-3B           | 46                           | 0.4395             | 0.3181         | 0.3616       | 0.1067  |
