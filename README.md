@@ -124,18 +124,20 @@ El tercer paso es entrenar los modelos de regresión. Sin embargo, antes hay que
 
 ### Redes neuronales
 #### Hoja de ruta
-La hoja de ruta que se sigue para desarrollar la red neuronal es:
-1) Se parte de la red neuronal más sencilla: el perceptrón simple.
-2) Se añaden nuevas capas (lineales y no lineales) para dar mayor expresividad al modelo, obteniendo el perceptrón multicapa.
-3) Se prueban diferentes valores de tasa de aprendizaje y épocas para determinar cuál sería el valor óptimo.
-4) Se prueban técnicas vistas en clase para optimizar el modelo: ```dropout``` y ```early stopping```.
-5) Trabajo futuro: se podrían aplicar otras técnicas para mejorar las prestaciones, como la inicialización de los pesos (Xavier y He), otros optimizadores (e.g., Adam), el uso de ```schedulers``` para la tasa de aprendizaje, ```lasso regularization```, ```ridge regularization```, ```batch normalisation```, ```data augmentation```, etc.
+1) Obtener los conjuntos de entrenamiento, validación y pruebas. Convertir los conjuntos a tensores de PyTorch. Generar lotes de entrenamiento (```batch_size=64```).
+2) Entrenar, validar y evaluar la red neuronal más sencilla: el perceptrón simple.
+3) Añadir nuevas capas (lineales y no lineales) al perceptrón para dar mayor expresividad al modelo. Entrenar, validar y evaluar el perceptrón multicapa.
+4) Probar diferentes valores de tasa de aprendizaje y épocas para determinar cuáles serían los valores óptimos en el perceptrón multicapa.
+5) Probar técnicas vistas en clase para optimizar el perceptrón multicapa: ```dropout``` y ```early stopping```.
+6) Trabajo futuro: aplicar otras técnicas para mejorar las prestaciones, como la inicialización de los pesos (Xavier y He), otros optimizadores (e.g., Adam), el uso de ```schedulers``` para la tasa de aprendizaje, ```lasso regularization```, ```ridge regularization```, ```batch normalisation```, ```data augmentation```, etc.
 
-Aspectos a tener en cuenta antes de continuar:
-1) Las funciones de activación no lineales de las capas ocultas son ReLU. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), se recomienda que en los perceptrones siempre se utilice ReLU, por lo que no se prueban otras.
-2) La función de activación de la capa de salida es la lineal. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), no se puede emplear ninguna otra cuando se trata de un modelo de regresión.
-3) Se ha establecido que la función de pérdidas sea el MSE (Mean Squared Error). El motivo de esta elección es que es el error que se suele emplear en problemas de regresión, tal y como se puede leer [aquí](https://machinelearningmastery.com/how-to-choose-loss-functions-when-training-deep-learning-neural-networks/).
-Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
+Sobre el entrenamiento:
+- Se ha establecido que la función de pérdidas sea el MSE (Mean Squared Error). El motivo de esta elección es que es el error que se suele emplear en problemas de regresión, tal y como se puede leer [aquí](https://machinelearningmastery.com/how-to-choose-loss-functions-when-training-deep-learning-neural-networks/).
+- Las funciones de activación no lineales de las capas ocultas son ReLU. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), se recomienda que en los perceptrones siempre se utilice ReLU, por lo que no se prueban otras.
+- La función de activación de la capa de salida es la lineal. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), no se puede emplear ninguna otra cuando se trata de un modelo de regresión.
+
+Sobre la validación y la evaluación:
+- Se ha establecido que para validar los parámetros y evaluar la red neuronal la métrica empleada sea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
 
 #### Análisis de los resultados
 
@@ -152,16 +154,17 @@ Para validar el modelo se emplea el MAE (Mean Absolute Error) porque proporciona
 
 ### Regresor k-NN
 #### Hoja de ruta
-1) El regresor k-NN cuenta con [varios hiperparámetros](https://scikit-learn.org/1.5/modules/generated/sklearn.neighbors.KNeighborsRegressor.html). En este proyecto se analiza el valor óptimo del número de vecinos (```n_neighbors```) en un rango de 1 a 100. El motivo de elegir un rango amplio de vecinos se debe a que el número de muestras utilizadas para entrenar el regresor k-NN es elevado. El resto de los hiperparámetros mantienen sus valores por defecto.
-2) El valor óptimo de ```n_neighbors``` se va a determinar mediante validación cruzada utilizando el conjunto de entrenamiento. En concreto, se aplica ```10-Fold cv```, tal y como se realizó en la práctica de regresión de la asignatura. Además, la métrica para determinar el valor óptimo de ```n_neighbors``` es el MAE (Mean Absolute Error). El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal.
-3) Finalmente, tras entrenar los regresores k-NN, se va a determinar las prestaciones de cada uno hallando el MAE sobre el conjunto de pruebas.
+1) Obtener los conjuntos de entrenamiento y de pruebas. Es importante mencionar que el conjunto de entrenamiento incluye el conjunto de validación porque en este apartado se utilizará validación cruzada. Además, las muestras asignadas a cada conjunto son las mismas que en redes neuronales ya que se les ha asignado el mismo ```random_state```.
+2) El regresor k-NN cuenta con [varios hiperparámetros](https://scikit-learn.org/1.5/modules/generated/sklearn.neighbors.KNeighborsRegressor.html). En este proyecto se analiza el valor óptimo del número de vecinos (```n_neighbors```) en un rango de 1 a 100. El motivo de elegir un rango amplio de vecinos se debe a que el número de muestras utilizadas para entrenar el regresor k-NN es elevado. El resto de los hiperparámetros mantienen sus valores por defecto.
+3) El valor óptimo de ```n_neighbors``` se va a determinar mediante validación cruzada utilizando el conjunto de entrenamiento. En concreto, se aplica ```10-Fold cv```, tal y como se realizó en la práctica de regresión de la asignatura. Además, la métrica para determinar el valor óptimo de ```n_neighbors``` es el MAE (Mean Absolute Error). El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal.
+4) Determinar las prestaciones de cada regresor k-NN hallando el MAE sobre el conjunto de pruebas.
 
 #### Análisis de los resultados
 Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su número óptimo de vecinos y el MAE obtenido sobre el conjunto de pruebas. Se observa que la vectorización que mejores prestaciones ofrece es embeddings, seguido de TF-IDF y Word2Vec. Además, en cuanto al número de vecinos, las vectorizaciones embeddings y Word2Vec necesitan un número menor de vecinos respecto a TF-IDF.
 
 | **Vectorización**  | **Número de vecinos óptimo** | **MAE (pruebas)**     |
 |--------------------|------------------------------|-----------------------|
-| Embeddings         | 37                           | 0.81                  |
+| **Embeddings**     | **37**                       | **0.81**              |
 | TF-IDF             | 42                           | 0.85                  |
 | Word2Vec           | 37                           | 0.86                  | 
 
