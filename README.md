@@ -254,11 +254,20 @@ Los pasos para realizar el fine-tuning son:
 4) Entrenar el modelo con el conjunto de entrenamiento.
 5) Evaluar el modelo con el conjunto de pruebas y la métrica MAE. El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal y el regresor k-NN.
 
-#### Análisis de los resultados
-Completar...
+El resultado obtenido es un modelo que, al ser evaluado sobre el conjunto de pruebas, obtiene un MAE de 0'85. Además, cabe destacar el buen rendimiento del fine-tuning; BERT es un modelo que no ha sido preentrenado para predecir valoraciones, pero es capaz de ofrecer buenas prestaciones.
 
 ### Red Neuronal vs k-NN vs fine-tuning
-Completar...
+El mejor regresor k-NN destaca sobre la mejor red neuronal y el modelo con fine-tuning. Los motivos son:
+
+1) Simplicidad: El regresor k-NN solamente necesita validar un parámetro (número de vecinos), mientras que los otros dos dependen de muchos parámetros (número de capas, número de neuronas en cada capa, tasa de aprendizaje, número de épocas, optimizador, etc.).
+
+2) Prestaciones: El regresor k-NN junto con la vectorización embeddings ofrece los mejores resultados.
+
+| **Regresor** | **MAE (pruebas)** |
+|--------------|-------------------|
+| Red Neuronal | 0.85              |
+| **k-NN**     | **0.81**          |
+| fine-tuning  | 0.85              | 
 
 # Extensión
 La extensión que se va a implementar es: ```uso de un summarizer preentrenado (utilizando pipelines de Hugging Face) para proporcionar un resumen de la característica 'directions'```.
