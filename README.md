@@ -165,7 +165,7 @@ Como se puede observar, la mejor vectorización para el perceptrón multicapa es
 | Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
 | Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
 
-De esta tabla se puede concluir que la mejor tasa de aprendizaje para los tres tipos de vectorización en el perceptrón multicapa es 0'001, con la vectorización TF-IDF mostrando el mejor rendimiento general en este caso. No obstante, se decidió continuar analizando si con las técnicas de ```dropout``` y ```early stopping``` se podían mejorar las prestaciones.
+De esta tabla se puede concluir que la mejor tasa de aprendizaje para los tres tipos de vectorización en el perceptrón multicapa es 0'001, con la vectorización TF-IDF mostrando el mejor rendimiento general en este caso. No obstante, se decidió continuar analizando si con las técnicas de ```dropout``` y ```early stopping``` se pudieran mejorar las prestaciones.
 
 ##### Dropout
 Esta técnica se aplicó para TF-IDF con tasa de aprendizaje 0'1, Word2Vec con tasa de aprendizaje 0'0055 y embeddings con tasa de aprendizaje 0'001. Lo lógico hubiera sido aplicar ```dropout``` para las tasas de aprendizaje que mejores valores ofrecían en el punto anterior (0'001 en los tres casos). Sin embargo, en TF-IDF y Word2Vec con tasa de aprendizaje 0'001 no había sobreentrenamiento, por lo que aplicar esta técnica no tenía sentido. En su lugar, se utilizaron las segundas mejores tasas de aprendizaje para ver si se podían mejorar sus prestaciones.
@@ -274,7 +274,7 @@ La extensión que se va a implementar es: ```uso de un summarizer preentrenado (
 
 - Se va a probar la capacidad de resumir de tres modelos: [facebook/bart-large-cnn](https://huggingface.co/facebook/bart-large-cnn)<sup>[1]</sup>, [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) y [DISLab/SummLlama3.2-3B](https://huggingface.co/DISLab/SummLlama3.2-3B)<sup>[2]</sup>.
 - Para determinar cómo de buenos son los resúmenes obtenidos, lo ideal sería compararlos con los realizados por un ser humano. Sin embargo, para optimizar el tiempo de trabajo, los resúmenes obtenidos de los tres modelos se van a comparar con los resúmenes generados por ChatGPT-4o. 
-- Para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan. Además, se utilizará la métrica BERT score que, aunque suponga un coste computacional mayor, determinará mejor la calidad de los resúmenes obtenidos.
+- Para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan. Además, se utilizará la métrica [BERT score](https://medium.com/@abonia/bertscore-explained-in-5-minutes-0b98553bfb71) que, aunque suponga un coste computacional mayor, determinará mejor la calidad de los resúmenes obtenidos.
 
 <sup>[1]</sup> Se trata de un modelo con arquitectura encoder-decoder. En concreto, es el fine-tuning de [facebook/bart-large](https://huggingface.co/facebook/bart-large).
 
@@ -354,17 +354,13 @@ cup Pêcher Mignon in small bowl; sprinkle gelatin over. Set aside to soften.
 
 - ROUGE indica las coincidencias de tokens (o N-gramas) entre dos textos: el de referencia (resúmenes generados por ChatGPT-4o) y el de hipótesis (resúmenes generados por los otros tres modelos).
 
-- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular ```precision```.
-
-<br>
+- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1 ```precision```. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular el valor de ```precision``` como
 
 $$\text{precision} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de hipótesis}}$$
 
-<br>
-
 - Los pasos para calcular la métrica BLEU son: 1) tokenizar los resúmenes, 2) calcular los tokens, bigramas y trigramas que tienen en común la referencia y la hipótesis, 3) calcular el valor de ```precision``` para los tokens, bigramas y trigramas, 4) calcular una penalización basada en la longitud de los resúmenes de referencia y de hipótesis, 4) calcular BLEU como el producto de los tres valores de ```precision``` y la penalización.
 
-- BERT score hace uso del modelo RoBERTa (355M de parámetros) para obtener los embeddings del texto de referencia y de hipótesis. Después, calcula la similitud coseno entre ambos.
+- BERT score hace uso del modelo RoBERTa (355M de parámetros) para obtener los embeddings del texto de referencia y de hipótesis. Después, calcula la similitud coseno entre ambos vectores.
 
 - Las tres métricas tienen un rango de valores de 0 a 1, donde 0 significa que el resumen de la hipótesis es de baja calidad y 1 indica que es de alta calidad.
 
@@ -377,10 +373,17 @@ Los resultados obtenidos se resumen en la siguiente tabla:
 | DISLab/SummLlama3.2-3B           | 46                           | 0.4437             | 0.1341 | 0.9020     |
 | facebook/bart-large-cnn          | 46                           | 0.3772             | 0.0585 | 0.8742     |
 
-<br>
-
-En un principio, solo se utilizaron las métricas ROUGE y BLEU para evaluar los resúmenes. Con estas métricas, se observó que la calidad de los tres modelos era bastante baja, especialmente en el caso de ```facebook/bart-large-cnn```. No obstante, al emplear BERT score, las conclusiones son completamente diferentes. Esta gran discrepancia entre los resultados de las métricas se debe a las limitaciones de ROUGE y BLEU. Ambas métricas se basan únicamente en la coincidencia de n-gramas, lo que las hace incapaces de capturar el significado del texto generado.
+En un principio, solo se utilizaron las métricas ROUGE y BLEU para evaluar los resúmenes. Con estas métricas, se observó que la calidad de los tres modelos era bastante baja, especialmente en el caso de ```facebook/bart-large-cnn```. No obstante, al emplear BERT score, las conclusiones son completamente diferentes. Esta gran discrepancia entre los resultados de las métricas se debe a las limitaciones de ROUGE y BLEU. Ambas métricas se basan únicamente en la coincidencia de n-gramas, lo que las hace incapaces de capturar el significado del texto generado. 
 
 Si se analizan los resultados de BERT score:
 - Se observa que los modelos ```meta-llama/Llama-3.2-3B-Instruct``` y ```DISLab/SummLlama3.2-3B``` son mejores que ```facebook/bart-large-cnn```. Esto puede deberse a que los dos primeros modelos cuentan con 3.21B de parámetros respecto a los 406M del último. Aunque el número de parámetros no asegura automáticamente mejores resultados, generalmente sí contribuye a un mejor desempeño.
 - Se observa que ```DISLab/SummLlama3.2-3B``` es mejor que ```meta-llama/Llama-3.2-3B-Instruct```. Esto tiene sentido ya que el primer modelo ha sido especializado en resumir, mientras que el segundo no.
+
+Por último, es importante comentar que el modelo ```facebook/bart-large``` no se ha podido probar. Los motivos se encuentran en su [ficha](https://huggingface.co/facebook/bart-large) de Hugging Face:
+
+- BART is particularly effective when fine-tuned for text generation (e.g. summarization, translation) but also works well for comprehension tasks (e.g. text classification, question answering).
+- You can use the raw model for text infilling. However, the model is mostly meant to be fine-tuned on a supervised dataset. See the model hub to look for fine-tuned versions on a task that interests you.
+
+<br>
+
+Proyecto de la asignatura Tratamiento de Datos realizado por Calin Cristian Dinga Pastae (100451528) y Víctor Díez Rozas (100451534).
