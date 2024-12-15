@@ -106,9 +106,10 @@ La primera receta sin preprocesar:
 Whisk egg whites in a large bowl until foamy and add eggshells..."
 
 Los tokens asignados por BERT a la primera receta:
-['date', ':', 'month', '8', 'and', 'day', '20', '.', 'categories', ':', 'soup', '/', 'stew', ',', 'beef', ',', 'tomato',
-',', 'ce', '##ler', '##y', ',', 'fall', ',', 'sim', '##mer', ',', 'go', '##ur', '##met', '.', 'directions', ':', 'w',
-'##his', '##k', 'egg', 'whites', 'in', 'a', 'large', 'bowl', 'until', 'foam', '##y', 'and', 'add', 'eggs', '##hell', ...]
+['date', ':', 'month', '8', 'and', 'day', '20', '.', 'categories', ':', 'soup', '/', 'stew', ',', 'beef', ',',
+'tomato', ',', 'ce', '##ler', '##y', ',', 'fall', ',', 'sim', '##mer', ',', 'go', '##ur', '##met', '.',
+'directions', ':', 'w', '##his', '##k', 'egg', 'whites', 'in', 'a', 'large', 'bowl', 'until', 'foam', '##y',
+'and', 'add', 'eggs', '##hell', ...]
 
 La primera receta vectorizada en formato embeddings:
 tensor([-2.7185e-01,  5.5473e-02,  2.1420e-01,  1.5966e-01,  3.8665e-01, -1.1112e-01, -3.5711e-02,  3.8871e-01,
