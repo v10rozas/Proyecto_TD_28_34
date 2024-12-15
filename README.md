@@ -117,12 +117,6 @@ tensor([-2.7185e-01,  5.5473e-02,  2.1420e-01,  1.5966e-01,  3.8665e-01, -1.1112
 ```
 **Nota:** Ejemplo (recortado) de vectorización embeddings.
 
-### Preparación de los datos para los modelos
-
-El tercer paso es entrenar los modelos de regresión. Sin embargo, antes hay que preparar los datos:
-1) Obtener los conjuntos de entrenamiento y de pruebas.
-2) En el caso de las redes neuronales, convertir las recetas vectorizadas a tensores de PyTorch y, posteriormente, generar los lotes de entrenamiento y de pruebas. Cabe mencionar que el tamaño de los lotes (```batch_size```) es de 64 y que, para este proyecto, no se han probado otros valores.
-
 ### Redes neuronales
 #### Hoja de ruta
 1) Obtener los conjuntos de entrenamiento, validación y pruebas. Convertir los conjuntos a tensores de PyTorch. Generar lotes de entrenamiento (```batch_size=64```).
@@ -141,16 +135,15 @@ Sobre la validación y la evaluación:
 - Se ha establecido que para validar los parámetros y evaluar la red neuronal la métrica empleada sea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
 
 #### Análisis de los resultados
-Primero, se entrenó, validó y evaluó el perceptrón simple. Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+##### Perceptrón simple y multicapa. Validación de la tasa de aprendizaje.
+Primero se entrenó, validó y evaluó el perceptrón simple. Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
 | **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
 | Perceptrón simple + lr=0.01       | 0.95              | **0.85**          | 0.88              |
 
-De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstante, el perceptrón simple es un regresor que, debido a su naturaleza lineal, no capta de manera adecuada las relaciones no lineales que pueden existir en los datos.
-
-Entonces, se entrenó, validó y evaluó un perceptrón multicapa que consta de una única capa oculta y una función de activación ReLU. El número de neuronas de la capa oculta se corresponde, aproximadamente, con 2/3 del número total de características, tal y como se menciona [aquí](https://medium.com/geekculture/introduction-to-neural-network-2f8b8221fbd3). Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstante, el perceptrón simple es un regresor que, debido a su naturaleza lineal, no capta de manera adecuada las relaciones no lineales que pueden existir en los datos. Por este motivo, se decidió añadir nuevas capas (lineales y no lineales) al regresor. En concreto, se añadió una única capa oculta y una función de activación ReLU. El número de neuronas de la capa oculta se fijó en, aproximadamente, 2/3 del número total de características, tal y como se menciona [aquí](https://medium.com/geekculture/introduction-to-neural-network-2f8b8221fbd3). Los nuevos resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
@@ -158,7 +151,7 @@ Entonces, se entrenó, validó y evaluó un perceptrón multicapa que consta de 
 | Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
 | Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | **0.92**          |
 
-De esta tabla se puede concluir que la mejor vectorización para el perceptrón multicapa es Word2Vec. Sin embargo, se observa que las prestaciones al añadir nuevas capas son peores que las obtenidas en el perceptrón simple. Por este motivo, se probaron diferentes valores de tasa de aprendizaje (0.001, 0.0055, 0.055 y 0.1) para intentar mejorar las métricas. Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+Como se puede observar, la mejor vectorización para el perceptrón multicapa es Word2Vec. Sin embargo, se observa que las prestaciones al añadir nuevas capas son peores que las obtenidas en el perceptrón simple. Por este motivo, se decidió probar diferentes valores de tasa de aprendizaje (0.001, 0.0055, 0.055 y 0.1) para intentar mejorar las métricas, obteniendo los resultados que se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
@@ -170,13 +163,36 @@ De esta tabla se puede concluir que la mejor vectorización para el perceptrón 
 | Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
 | Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
 
+De esta tabla se puede concluir que la mejor tasa de aprendizaje para los tres tipos de vectorización en el perceptrón multicapa es 0'001, con la vectorización TF-IDF mostrando el mejor rendimiento general en este caso. No obstante, se decidió continuar analizando si con las técnicas de ```dropout```y ```early stopping```se podían mejorar las prestaciones.
 
+##### ```Dropout```
+Esta técnica se aplicó para TF-IDF con tasa de aprendizaje 0'1, Word2Vec con tasa de aprendizaje 0'0055 y embeddings con tasa de aprendizaje 0'001. Lo lógico hubiera sido aplicar ```dropout``` para las tasas de aprendizaje que mejores valores ofrecían en el punto anterior (0'001 en los tres casos). Sin embargo, en TF-IDF y Word2Vec con tasa de aprendizaje 0'001 no había sobreentrenamiento, por lo que aplicar esta técnica no tenía sentido. En su lugar, se utilizaron las segundas mejores tasas de aprendizaje para ver si se podían mejorar sus prestaciones.
+
+Además, el valor de la probabilidad de ```dropout``` se estableció inicialmente en 0'5 para las tres técnicas de vectorización. Este valor fue suficiente para evitar el sobreentrenamiento en Word2Vec y embeddings. Sin embargo, no ocurrió lo mismo en TF-IDF, lo que llevó a aumentar su tasa de ```dropout``` a 0'8 en un intento de mitigar este problema. Aunque este incremento ayudó a reducir el sobreentrenamiento, los resultados apenas mejoraron. Por ello, se considera que una posible mejora futura sería aplicar una técnica de regularización adicional para reducir aún más el sobreentrenamiento en TF-IDF.
+
+Los resultados obtenidos tras aplicar ```dropout``` se muestran en la siguiente tabla. De ellos, se concluye que aplicar ```dropout``` mejora ligeramente las prestaciones de Word2Vec y embeddings. Sin embargo, no ocurre lo mismo con TF-IDF.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
 | **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
-| Perceptrón simple + lr=0.01       | **0.95**          | **0.85**          | **0.88**          |
+| Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
 | Perceptrón multicapa + lr=0.001   | **0.89**          | **0.86**          | **0.88**          |
+| Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
+| Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
+| Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
+| Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
+| MLP + lr=0.1 + dropout            | -                 | **0.91**          | -                 |
+| MLP + lr=0.0055 + dropout         | -                 | -                 | **0.85**          |
+| MLP + lr=0.001 + dropout          | **0.89**          | -                 | -                 |
+
+##### ```early stopping```
+Esta técnica se aplicó para el mejor modelo de cada vectorización: TF-IDF con tasa de aprendizaje 0'001, Word2Vec con tasa de aprendizaje 0'0055 y ```dropout```, y embeddings con tasa de aprendizaje 0'001 y ```dropout```. Los resultados obtenidos se muestran en la siguiente tabla. De ellos, se concluye que aplicar ```early stopping``` no mejora las prestaciones de ninguna vectorización.
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
+| Perceptrón multicapa + lr=0.001   | 0.89              | **0.86**          | 0.88              |
 | Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
 | Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
 | Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
@@ -184,6 +200,25 @@ De esta tabla se puede concluir que la mejor vectorización para el perceptrón 
 | MLP + lr=0.1 + dropout            | -                 | 0.91              | -                 |
 | MLP + lr=0.0055 + dropout         | -                 | -                 | **0.85**          |
 | MLP + lr=0.001 + dropout          | **0.89**          | -                 | -                 |
+| MLP + lr=0.001 + es               | -                 | **0.91**          | -                 |
+| MLP + lr=0.0055 + dropout + es    | -                 | -                 | **0.92**          |
+| MLP + lr=0.001 + dropout + es     | **0.89**          | -                 | -                 |
+
+##### Elección de la red neuronal
+A la vista de los resultados, la red neuronal que mejores prestaciones tiene es el perceptrón multicapa con vectorización Word2Vec, tasa de aprendizaje 0'0055 y ```dropout``` ya que es el que mejor valor de MAE de pruebas tiene.
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
+| Perceptrón multicapa + lr=0.001   | 0.89              | 0.86              | 0.88              |
+| Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
+| Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
+| Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
+| Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
+| MLP + lr=0.1 + dropout            | -                 | 0.91              | -                 |
+| **MLP + lr=0.0055 + dropout**     | -                 | -                 | **0.85**          |
+| MLP + lr=0.001 + dropout          | 0.89              | -                 | -                 |
 | MLP + lr=0.001 + es               | -                 | 0.91              | -                 |
 | MLP + lr=0.0055 + dropout + es    | -                 | -                 | 0.92              |
 | MLP + lr=0.001 + dropout + es     | 0.89              | -                 | -                 |
