@@ -122,17 +122,19 @@ tensor([-2.7185e-01,  5.5473e-02,  2.1420e-01,  1.5966e-01,  3.8665e-01, -1.1112
 1) Obtener los conjuntos de entrenamiento, validación y pruebas. Convertir los conjuntos a tensores de PyTorch. Generar lotes de entrenamiento (```batch_size=64```).
 2) Entrenar, validar y evaluar la red neuronal más sencilla: el perceptrón simple.
 3) Añadir nuevas capas (lineales y no lineales) al perceptrón para dar mayor expresividad al modelo. Entrenar, validar y evaluar el perceptrón multicapa.
-4) Probar diferentes valores de tasa de aprendizaje y épocas para determinar cuáles serían los valores óptimos en el perceptrón multicapa.
+4) Probar diferentes valores de tasa de aprendizaje para determinar cuál sería el valor óptimo en el perceptrón multicapa.
 5) Probar técnicas vistas en clase para optimizar el perceptrón multicapa: ```dropout``` y ```early stopping```.
 6) Trabajo futuro: aplicar otras técnicas para mejorar las prestaciones, como la inicialización de los pesos (Xavier y He), otros optimizadores (e.g., Adam), el uso de ```schedulers``` para la tasa de aprendizaje, ```lasso regularization```, ```ridge regularization```, ```batch normalisation```, ```data augmentation```, etc.
 
-Sobre el entrenamiento:
-- Se ha establecido que la función de pérdidas sea el MSE (Mean Squared Error). El motivo de esta elección es que es el error que se suele emplear en problemas de regresión, tal y como se puede leer [aquí](https://machinelearningmastery.com/how-to-choose-loss-functions-when-training-deep-learning-neural-networks/).
-- Las funciones de activación no lineales de las capas ocultas son ReLU. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), se recomienda que en los perceptrones siempre se utilice ReLU, por lo que no se prueban otras.
-- La función de activación de la capa de salida es la lineal. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), no se puede emplear ninguna otra cuando se trata de un modelo de regresión.
-
-Sobre la validación y la evaluación:
-- Se ha establecido que para validar los parámetros y evaluar la red neuronal la métrica empleada sea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
+Sobre las redes neuronales:
+- El número de características a la entrada se corresponde con el número de características de cada vectorización. El número de características a la salida es 1 porque se trata de un problema de regresión.
+- En el perceptrón simple no hay capas ocultas. En el perceptrón multicapa hay una capa oculta. El número de neuronas de dicha capa es, aproximadamente, 2/3 el número total de características, tal y como se recomienda [aquí](https://medium.com/geekculture/introduction-to-neural-network-2f8b8221fbd3).
+- En el perceptrón simple no hay funciones de activación no lineales. En el perceptrón multicapa hay una ReLU. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), se recomienda que en los perceptrones siempre se utilice ReLU, por lo que no se prueban otras.
+- En todos los casos, la función de activación de la capa de salida es la lineal. De acuerdo con lo leído [aquí](https://machinelearningmastery.com/choose-an-activation-function-for-deep-learning/), no se puede emplear ninguna otra cuando se trata de un problema de regresión.
+- Se ha establecido que la función de pérdidas durante el entrenamiento sea el MSE (Mean Squared Error). El motivo de su elección es que es el error que se suele emplear en problemas de regresión, tal y como se puede leer [aquí](https://machinelearningmastery.com/how-to-choose-loss-functions-when-training-deep-learning-neural-networks/).
+- Se ha establecido que el optimizador durante el entrenamiento sea el SGD (Stochastic Gradient Descent). El motivo de su elección es que es el optimizador que se ha utilizado en la asignatura.
+- Se ha establecido que, para validar los parámetros y evaluar la red neuronal, la métrica empleada sea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
+- Todos los entrenamientos se han llevado a cabo durante 400 épocas. Sin embargo, los regresores utilizados para evaluar sobre el conjunto de pruebas tienen los parámetros para los que el MAE del conjunto de validación es mínimo.
 
 #### Análisis de los resultados
 ##### Perceptrón simple y multicapa. Validación de la tasa de aprendizaje.
@@ -143,7 +145,7 @@ Primero se entrenó, validó y evaluó el perceptrón simple. Los resultados obt
 | **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
 | Perceptrón simple + lr=0.01       | 0.95              | **0.85**          | 0.88              |
 
-De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstante, el perceptrón simple es un regresor que, debido a su naturaleza lineal, no capta de manera adecuada las relaciones no lineales que pueden existir en los datos. Por este motivo, se decidió añadir nuevas capas (lineales y no lineales) al regresor. En concreto, se añadió una única capa oculta y una función de activación ReLU. El número de neuronas de la capa oculta se fijó en, aproximadamente, 2/3 del número total de características, tal y como se menciona [aquí](https://medium.com/geekculture/introduction-to-neural-network-2f8b8221fbd3). Los nuevos resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstante, el perceptrón simple es un regresor que, debido a su naturaleza lineal, no capta de manera adecuada las relaciones no lineales que pueden existir entre los datos. Por este motivo, se decidió añadir nuevas capas (lineales y no lineales) al regresor. En concreto, se añadió una capa oculta y una función de activación ReLU. Los nuevos resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
@@ -151,21 +153,21 @@ De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstan
 | Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
 | Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | **0.92**          |
 
-Como se puede observar, la mejor vectorización para el perceptrón multicapa es Word2Vec. Sin embargo, se observa que las prestaciones al añadir nuevas capas son peores que las obtenidas en el perceptrón simple. Por este motivo, se decidió probar diferentes valores de tasa de aprendizaje (0.001, 0.0055, 0.055 y 0.1) para intentar mejorar las métricas, obteniendo los resultados que se muestran en la siguiente tabla.
+Como se puede observar, la mejor vectorización para el perceptrón multicapa es Word2Vec. Sin embargo, se observa que las prestaciones al añadir nuevas capas son peores que las obtenidas en el perceptrón simple. Por este motivo, se decidió probar diferentes valores de tasa de aprendizaje (0'001, 0'0055, 0'055 y 0'1) para intentar mejorar las métricas, obteniendo los resultados que se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
 | **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
 | Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
-| Perceptrón multicapa + lr=0.001   | **0.89**          | **0.86**          | **0.88**          |
+|**Perceptrón multicapa + lr=0.001**| **0.89**          | **0.86**          | **0.88**          |
 | Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
 | Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
 | Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
 | Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
 
-De esta tabla se puede concluir que la mejor tasa de aprendizaje para los tres tipos de vectorización en el perceptrón multicapa es 0'001, con la vectorización TF-IDF mostrando el mejor rendimiento general en este caso. No obstante, se decidió continuar analizando si con las técnicas de ```dropout```y ```early stopping```se podían mejorar las prestaciones.
+De esta tabla se puede concluir que la mejor tasa de aprendizaje para los tres tipos de vectorización en el perceptrón multicapa es 0'001, con la vectorización TF-IDF mostrando el mejor rendimiento general en este caso. No obstante, se decidió continuar analizando si con las técnicas de ```dropout``` y ```early stopping``` se podían mejorar las prestaciones.
 
-##### ```Dropout```
+##### Dropout
 Esta técnica se aplicó para TF-IDF con tasa de aprendizaje 0'1, Word2Vec con tasa de aprendizaje 0'0055 y embeddings con tasa de aprendizaje 0'001. Lo lógico hubiera sido aplicar ```dropout``` para las tasas de aprendizaje que mejores valores ofrecían en el punto anterior (0'001 en los tres casos). Sin embargo, en TF-IDF y Word2Vec con tasa de aprendizaje 0'001 no había sobreentrenamiento, por lo que aplicar esta técnica no tenía sentido. En su lugar, se utilizaron las segundas mejores tasas de aprendizaje para ver si se podían mejorar sus prestaciones.
 
 Además, el valor de la probabilidad de ```dropout``` se estableció inicialmente en 0'5 para las tres técnicas de vectorización. Este valor fue suficiente para evitar el sobreentrenamiento en Word2Vec y embeddings. Sin embargo, no ocurrió lo mismo en TF-IDF, lo que llevó a aumentar su tasa de ```dropout``` a 0'8 en un intento de mitigar este problema. Aunque este incremento ayudó a reducir el sobreentrenamiento, los resultados apenas mejoraron. Por ello, se considera que una posible mejora futura sería aplicar una técnica de regularización adicional para reducir aún más el sobreentrenamiento en TF-IDF.
@@ -185,8 +187,8 @@ Los resultados obtenidos tras aplicar ```dropout``` se muestran en la siguiente 
 | MLP + lr=0.0055 + dropout         | -                 | -                 | **0.85**          |
 | MLP + lr=0.001 + dropout          | **0.89**          | -                 | -                 |
 
-##### ```early stopping```
-Esta técnica se aplicó para el mejor modelo de cada vectorización: TF-IDF con tasa de aprendizaje 0'001, Word2Vec con tasa de aprendizaje 0'0055 y ```dropout```, y embeddings con tasa de aprendizaje 0'001 y ```dropout```. Los resultados obtenidos se muestran en la siguiente tabla. De ellos, se concluye que aplicar ```early stopping``` no mejora las prestaciones de ninguna vectorización.
+##### Early stopping
+Esta técnica se aplicó para el mejor modelo de cada vectorización: TF-IDF con tasa de aprendizaje 0'001, Word2Vec con tasa de aprendizaje 0'0055 y ```dropout```, y embeddings con tasa de aprendizaje 0'001 y ```dropout```. Los resultados obtenidos se muestran en la siguiente tabla. De ellos, se concluye que aplicar ```early stopping``` no mejora las prestaciones de ninguna vectorización. La razón de este empeoramiento de los resultados es que ```early stopping``` hace que el entrenamiento se detenga exceisvamente pronto.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
@@ -243,7 +245,14 @@ Los resultados mostrados en la siguiente tabla indican, para cada regresor k-NN,
 A la vista de los resultados, el regresor k-NN que mejores prestaciones tiene es el que utiliza la vectorización embeddings. Por un lado, es el que mejor valor de MAE de pruebas tiene. Por otro lado, es el que menor número de vecinos necesita.
 
 ### Fine-tuning de BERT
-Completar...
+El modelo preentrenado que se va a utilizar para realizar fine-tuning es BERT. Se ha elegido porque es el transformers principal que se ha estudiado en la asignatura. Un trabajo futuro sería analizar otros modelos y diferentes arquitecturas (```encoder-only```, ```decoder-only``` y ```encoder-decoder```), teniendo en cuenta las limitaciones de hardware que tiene Google Colab.
+
+Los pasos para realizar el fine-tuning son:
+1) Tokenizar el conjunto de entrenamiento y de pruebas.
+2) Adaptar los conjuntos de datos a objetos de la clase ```Dataset```, necesaria para trabajar con Hugging Face.
+3) Cargar el modelo preentrenado BERT y configurarlo para un problema de regresión.
+4) Entrenar el modelo con el conjunto de entrenamiento.
+5) Evaluar el modelo con el conjunto de pruebas y la métrica MAE. El motivo de su elección es que es una métrica que se suele emplear en problemas de regresión, además de ser la métrica que se ha ido analizando en la red neuronal y el regresor k-NN.
 
 #### Análisis de los resultados
 Completar...
