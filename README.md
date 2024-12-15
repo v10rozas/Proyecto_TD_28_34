@@ -61,9 +61,9 @@ El primer paso es realizar un preprocesado de los datos. Para ello, se va a empl
 **Nota:** Ejemplo (recortado) de receta preprocesada.
 
 ### Vectorización de los datos
-El segundo paso es vectorizar los datos preprocesados. En concreto, se van a realizar tres tipos de vectorización: TF-IDF, word2vec y embeddings contextuales de BERT.
+El segundo paso es vectorizar los datos preprocesados. En concreto, se van a realizar tres tipos de vectorización: TF-IDF, Word2Vec y embeddings contextuales de BERT.
 
-- Los pasos para realizar la vectorización de TF-IDF son:
+- Los pasos para realizar la vectorización TF-IDF son:
   1) Generar el diccionario y filtrar aquellos tokens que aparezcan en menos de 4 recetas o en más del 80% de las recetas.
   2) Aplicar la vectorización BoW a cada una de las recetas.
   3) Generar el modelo TF-IDF y aplicar la vectorización TF-IDF a cada una de las recetas preprocesadas.
