@@ -161,7 +161,7 @@ Sobre la validación y la evaluación:
 4) Determinar las prestaciones de cada regresor k-NN hallando el MAE sobre el conjunto de pruebas.
 
 #### Análisis de los resultados
-Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su número óptimo de vecinos y el MAE obtenido sobre el conjunto de pruebas. Se observa que la vectorización que mejores prestaciones ofrece es embeddings, seguido de TF-IDF y Word2Vec. Además, en cuanto al número de vecinos, las vectorizaciones embeddings y Word2Vec necesitan un número menor de vecinos respecto a TF-IDF.
+Los resultados mostrados en la siguiente tabla indican, para cada regresor k-NN, su número óptimo de vecinos y el MAE obtenido sobre el conjunto de pruebas. Se observa que la vectorización que mejores prestaciones ofrece es embeddings, seguido de TF-IDF y Word2Vec. Además, en cuanto al número de vecinos, las vectorizaciones embeddings y Word2Vec necesitan un número menor de vecinos respecto a TF-IDF.
 
 | **Vectorización**  | **Número de vecinos óptimo** | **MAE (pruebas)**     |
 |--------------------|------------------------------|-----------------------|
@@ -170,7 +170,7 @@ Los resultados mostrados en la siguiente tabla indican, para regresor k-NN, su n
 | Word2Vec           | 37                           | 0.86                  | 
 
 #### Elección del regresor k-NN
-A la vista de los resultados, el modelo k-NN que mejores prestaciones tiene es el que utiliza la vectorización embeddings. Por un lado, es el que mejor valor de MAE de pruebas tiene. Por otro lado, es el que menor número de vecinos necesita.
+A la vista de los resultados, el regresor k-NN que mejores prestaciones tiene es el que utiliza la vectorización embeddings. Por un lado, es el que mejor valor de MAE de pruebas tiene. Por otro lado, es el que menor número de vecinos necesita.
 
 ### Fine-tuning de BERT
 Completar...
