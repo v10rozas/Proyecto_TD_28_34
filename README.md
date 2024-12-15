@@ -272,7 +272,9 @@ El mejor regresor k-NN destaca sobre la mejor red neuronal y el modelo con fine-
 # Extensión
 La extensión que se va a implementar es: ```uso de un summarizer preentrenado (utilizando pipelines de Hugging Face) para proporcionar un resumen de la característica 'directions'```.
 
-En concreto, se va a probar la capacidad de resumir de tres modelos: [facebook/bart-large-cnn](https://huggingface.co/facebook/bart-large-cnn)<sup>[1]</sup>, [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) y [DISLab/SummLlama3.2-3B](https://huggingface.co/DISLab/SummLlama3.2-3B)<sup>[2]</sup>. Para determinar cómo de buenos son los resúmenes obtenidos, lo ideal sería compararlos con los realizados por un ser humano. Sin embargo, para optimizar el tiempo de trabajo, los resúmenes obtenidos de los tres modelos se van a comparar con los resúmenes generados por ChatGPT-4o. Además, para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan.
+- Se va a probar la capacidad de resumir de tres modelos: [facebook/bart-large-cnn](https://huggingface.co/facebook/bart-large-cnn)<sup>[1]</sup>, [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct) y [DISLab/SummLlama3.2-3B](https://huggingface.co/DISLab/SummLlama3.2-3B)<sup>[2]</sup>.
+- Para determinar cómo de buenos son los resúmenes obtenidos, lo ideal sería compararlos con los realizados por un ser humano. Sin embargo, para optimizar el tiempo de trabajo, los resúmenes obtenidos de los tres modelos se van a comparar con los resúmenes generados por ChatGPT-4o. 
+- Para obtener un valor cuantitativo de la calidad de los resúmenes obtenidos, se van a aplicar las [métricas ROUGE y BLEU](https://neptune.ai/blog/llm-evaluation-text-summarization). El motivo de su elección es el bajo coste computacional que conllevan. Además, se utilizará la métrica BERT score que, aunque suponga un coste computacional mayor, determinará mejor la calidad de los resúmenes obtenidos.
 
 <sup>[1]</sup> Se trata de un modelo con arquitectura encoder-decoder. En concreto, es el fine-tuning de [facebook/bart-large](https://huggingface.co/facebook/bart-large).
 
@@ -282,78 +284,77 @@ En concreto, se va a probar la capacidad de resumir de tres modelos: [facebook/b
 
 ```
 INSTRUCCIONES:
-Bring 6 quarts water to a boil in pot, then plunge 2 lobsters headfirst into water and cook, covered, 8 minutes
-from time they enter water. Transfer with tongs to a shallow baking pan to cool. Return water to a boil and cook
-remaining 2 lobsters in same manner. When lobsters are cool enough to handle, remove meat from tail and claws
-and set aside. Cut tail shells and lobster bodies (not including claws) into 1-inch pieces with kitchen shears,
-then rinse well, discarding gills, eye sacs, tomalley, any roe, and claw shells. Transfer to a 6- to 8-quart
-heavy pot, then add wine, carrots, celery, fennel, onion, garlic, large tarragon sprigs, salt, fennel seeds,
-red-pepper flakes, and remaining 2 quarts water and bring to a boil. Reduce heat and simmer, uncovered, until
-liquid is reduced to about 6 cups, about 1 1/2 hours. While stock reduces, scrape any coagulated white albumin
-from lobster meat with a knife and cut meat into 1/2-inch pieces, then chill, covered. Pour stock through a
-dampened cheesecloth-lined large sieve into a large bowl, pressing on and then discarding solids. Transfer 2 3/4
-cups stock to a bowl. (Cool remaining stock completely, uncovered, then freeze in an airtight container for
-another use.) Sprinkle gelatin evenly over 1/4 cup stock in a 1-quart saucepan, then let stand 1 minute to soften.
-Heat over moderately low heat, stirring, just until gelatin is dissolved, then stir in vinegar and remaining 2 1/2
-cups stock. Put molds in a baking pan. Add 2 teaspoons gelatin mixture to each mold and freeze until set, about 10
-minutes. Put 1 small sprig of tarragon and a tip of claw meat in bottom of each mold, then divide lobster meat
-among molds. Fill with remaining gelatin mixture and chill, covered with plastic wrap, until set, at least 2 hours.
-To unmold, dip 1 mold in a pan of hot water 3 to 5 seconds to loosen. Run a thin knife around edge of mold and
-invert gelée out onto a plate. Repeat with remaining molds. Drizzle plates with fresh tarragon oil .
+Combine dried peaches and water in heavy medium saucepan. Let stand 30 minutes.
+Bring to boil. Reduce heat and simmer gently until peaches are very soft, about
+20 minutes. Meanwhile, place 1/4 cup Pêcher Mignon in small bowl; sprinkle
+gelatin over. Set aside to soften. Beat 3 egg yolks, 1/2 cup sugar and remaining
+1/4 cup Pêcher Mignon in top of double boiler until light in color. Set over
+simmering water and stir until thick enough to coat back of spoon when finger is
+drawn across (do not boil), about 2 minutes. Transfer to small bowl. Add gelatin
+to hot peach mixture and stir until dissolved. Transfer to processor and puree
+until smooth. Pour into large bowl. Cool to room temperature, stirring occasionally
+(do not let peach mixture set up.) Add custard to peach mixture and whisk to
+combine. Using electric mixer, beat cream in medium bowl to soft peaks. Mix 1/3
+of whipped cream into peach mixture to lighten. Gently fold in remaining cream in
+2 batches. Using clean dry beaters, beat egg whites and cream of tartar in another
+medium bowl until frothy. Gradually add remaining 3 1/2 tablespoons sugar and beat
+until smooth, glossy and almost stiff but not dry. Fold 1/3 of whites into peach
+mixture to lighten. Gently fold in remaining whites in 2 batches. Cover bowl with
+plastic and refrigerate mousse 8 hours or overnight. Spoon mousse into pastry bag
+fitted with large star tip. Pipe mousse into goblets or wine glasses. Top mousse
+with fresh mint sprigs and serve.
 
 
 RESUMEN GENERADO POR ChatGPT-4o:
-Boil 6 quarts of water in a pot and cook 2 lobsters for 8 minutes, then transfer to a pan to cool. Repeat with
-the remaining lobsters. Once cooled, remove the lobster meat from the tails and claws, set aside, and discard
-shells and unwanted parts. Cut the remaining shells into pieces and rinse well. In a large pot, combine the shell
-pieces with wine, vegetables, herbs, and seasonings, and simmer for about 1.5 hours until the liquid reduces.
-Strain the stock through cheesecloth, reserving 2 3/4 cups for the gelée. Sprinkle gelatin over 1/4 cup of stock
-and dissolve it over low heat, then add vinegar and the remaining stock. Pour the gelatin mixture into molds and
-freeze for 10 minutes. Add a sprig of tarragon and claw meat to each mold, then divide the lobster meat and fill
-with the gelatin mixture. Chill until set, about 2 hours. To unmold, dip molds in hot water briefly, run a knife
-around the edge, and invert onto plates. Drizzle with fresh tarragon oil.
+This recipe makes a peach mousse. First, dried peaches are softened in water,
+boiled, and pureed. Gelatin is dissolved in peach liquid, then combined with
+a custard made from egg yolks, sugar, and Pêcher Mignon. Whipped cream and
+beaten egg whites are gently folded into the peach mixture to create a light
+and airy mousse. The mousse is refrigerated for 8 hours or overnight, then
+piped into glasses and topped with fresh mint before serving.
     
 
 RESUMEN GENERADO POR meta-llama/Llama-3.2-3B-Instruct:
-This document provides a recipe for tempato lobster gelée, a French-inspired dish made from lobster, cream, and
-vegetables. Here's a step-by-step summary:
+The document is a recipe for a peach mousse dessert. Here's a summary of the
+steps involved:
 
-1. Bring 6 quarts of water to a boil, then cook 2 lobsters for 8 minutes. Let them cool, then remove the meat.
-2. Cut the lobster meat into small pieces and rinse them clean.
-3. In a large pot, combine the lobster meat, wine, vegetables, and stock, and simmer until the liquid is reduced
-to 6 cups.
-4. Strain the stock and chill it. Refrigerate or freeze it for later use.
-5. Mix together 1/4 cup of stock with gelatin to soften it. Heat it until the gelatin is dissolved, then stir in
-vinegar and the remaining stock.
-6. Divide the gelatin mixture among individual molds and pour it into each mold, followed by lobster meat and a
-sprig of tarragon.
-7. Chill the mixture in the mold until set, at least 2 hours.
-8. To unmold, dip the mold in hot water, then run a knife around the edge and invert the gelée onto a plate.
-9. Serve the gelée with fresh tarragon oil.
+1. Make a peach mixture by combining dried peaches and water, letting it sit,
+then boiling and reducing heat to simmer until the peaches are soft. Add gelatin
+and any remaining ingredients to the mixture and puree until smooth.
 
-This dish is designed to be elegant and flavorful, with a light and creamy texture from the gelatin and a delicate
-flavor from the lobster and tarragon.
+2. Prepare a custard mixture by beating egg yolks, sugar, and Pêcher Mignon in
+a double boiler until thickened.
+
+3. Combine the peach mixture with the custard mixture and add whipped cream to
+lighten the mixture.
+
+4. Whip egg whites and cream of tartar, then gently fold into the peach mixture.
+
+5. Cover the bowl with plastic and refrigerate the mousse for at least 8 hours
+or overnight.
+
+6. Pipe the mousse into goblets or wine glasses and top with fresh mint sprigs
+before serving.
 
 
 RESUMEN GENERADO POR DISLab/SummLlama3.2-3B:
-This recipe involves cooking lobsters and using the resulting broth to make a lobster gelée, which is then set in
-molds and served with a garnish of fresh tarragon oil. The instructions outline the process of boiling lobsters,
-cooling and setting them, and then using the lobster meat to make a stock that is reduced and clarified with gelatin,
-vinegar, and other ingredients. The stock is then used to set the gelée in molds, which are garnished with a sprig
-of tarragon and a tip of claw meat. The dish is finished with a drizzle of fresh tarragon oil.
+The recipe described is for a peach mousse, involving the preparation of a peach
+puree, the creation of a custard base, and the folding of whipped cream and egg
+whites to combine, all of which are then piped into pastry bags and set to chill
+in the refrigerator before serving, garnished with fresh mint sprigs.
 
 
 RESUMEN GENERADO POR facebook/bart-large-cnn:
-Lobster meat can be frozen for up to two months. gelatin, vinegar and tarragon can be added to the lobster meat. The
-gelatin mixture can be used to make a glaze for the lobster. The glaze can also be used as a base for other lobster
-dishes.
+Dried peaches and water in heavy medium saucepan. Bring to boil. Reduce heat and
+simmer gently until peaches are very soft, about 20 minutes. Meanwhile, place 1/4
+cup Pêcher Mignon in small bowl; sprinkle gelatin over. Set aside to soften.
 ```
 
-## ROUGE y BLEU
+## ROUGE, BLEU y BERT score
 
 - ROUGE indica las coincidencias de tokens (o N-gramas) entre dos textos: el de referencia (resúmenes generados por ChatGPT-4o) y el de hipótesis (resúmenes generados por los otros tres modelos).
 
-- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular ```precision```, ```recall``` y ```F1```.
+- Existen múltiples variantes de ROUGE. En este proyecto se ha utilizado ROUGE-1. Los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular cuántos tokens tienen en común la referencia y la hipótesis, 3) calcular ```precision```.
 
 <br>
 
@@ -361,40 +362,25 @@ $$\text{precision} = \frac{\text{Número de tokens solapados}}{\text{Número tot
 
 <br>
 
-$$\text{recall} = \frac{\text{Número de tokens solapados}}{\text{Número total de tokens en el resumen de referencia}}$$
+- Los pasos para calcular la métrica BLEU son: 1) tokenizar los resúmenes, 2) calcular los tokens, bigramas y trigramas que tienen en común la referencia y la hipótesis, 3) calcular el valor de ```precision``` para los tokens, bigramas y trigramas, 4) calcular una penalización basada en la longitud de los resúmenes de referencia y de hipótesis, 4) calcular BLEU como el producto de los tres valores de ```precision``` y la penalización.
 
-<br>
+- BERT score hace uso del modelo RoBERTa (355M de parámetros) para obtener los embeddings del texto de referencia y de hipótesis. Después, calcula la similitud coseno entre ambos.
 
-$$\text{F1 score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
-
-<br>
-
-- En cuanto a BLEU, los pasos para calcular la métrica son: 1) tokenizar los resúmenes, 2) calcular los tokens, bigramas y trigramas que tienen en común la referencia y la hipótesis, 3) calcular el valor de ```precision``` para los tokens, bigramas y trigramas, 4) calcular una penalización basada en la longitud de los resúmenes de referencia y de hipótesis, 4) calcular BLEU como el producto de los tres valores de ```precision``` y la penalización.
-
-- Tanto ROUGE como BLEU tienen un rango de valores de 0 a 1, donde 0 significa que el resumen de la hipótesis es de baja calidad y 1 indica que es de alta calidad.
+- Las tres métricas tienen un rango de valores de 0 a 1, donde 0 significa que el resumen de la hipótesis es de baja calidad y 1 indica que es de alta calidad.
 
 ## Análisis de los resultados
 Los resultados obtenidos se resumen en la siguiente tabla:
 
-| Modelo                           | Recetas resumidas            | ROUGE-1 precision  | ROUGE-1 recall | ROUGE-1 F1   | BLEU    |
-|----------------------------------|------------------------------|--------------------|----------------|--------------|---------|
-| meta-llama/Llama-3.2-3B-Instruct | 46                           | 0.4646             | 0.4556         | 0.4540       | 0.1874  |
-| DISLab/SummLlama3.2-3B           | 46                           | 0.4395             | 0.3181         | 0.3616       | 0.1067  |
-| facebook/bart-large-cnn          | 46                           | 0.6048             | 0.3161         | 0.4077       | 0.0944  |
+| Modelo                           | Recetas resumidas            | ROUGE-1 precision  | BLEU   | BERT score |
+|----------------------------------|------------------------------|--------------------|--------|------------|
+| meta-llama/Llama-3.2-3B-Instruct | 46                           | 0.3948             | 0.1428 | 0.8775     |
+| DISLab/SummLlama3.2-3B           | 46                           | 0.4437             | 0.1341 | 0.9020     |
+| facebook/bart-large-cnn          | 46                           | 0.3772             | 0.0585 | 0.8742     |
 
 <br>
 
-Estos valores muestran que ```meta-llama/Llama-3.2-3B-Instruct``` es el modelo que mejores prestaciones tiene, seguido de ```DISLab/SummLlama3.2-3B``` y, finalmente, ```facebook/bart-large-cnn```. Las razones por las que esto ocurre son:
+En un principio, solo se utilizaron las métricas ROUGE y BLEU para evaluar los resúmenes. Con estas métricas, se observó que la calidad de los tres modelos era bastante baja, especialmente en el caso de ```facebook/bart-large-cnn```. No obstante, al emplear BERT score, las conclusiones son completamente diferentes. Esta gran discrepancia entre los resultados de las métricas se debe a las limitaciones de ROUGE y BLEU. Ambas métricas se basan únicamente en la coincidencia de n-gramas, lo que las hace incapaces de capturar el significado del texto generado.
 
-- Los dos primeros modelos cuenta con 3.21B de parámetros respecto a los 406M del último. Aunque el número de parámetros no asegura automáticamente mejores resultados, generalmente sí contribuye a un mejor desempeño.
-
-- Entre los dos primeros modelos, el segundo debería obtener mejores prestaciones ya que ha sido especializado en resumir textos. Sin embargo, los valores de las métricas dicen lo contrario.
-
-- Que los resultados no sean los esperados puede deberse a:
-
-  1.   Bajo número de pruebas. Solamente se han probado 46 recetas. Se deberían probar más para poder afirmar qué modelo es mejor.
-  2.   Las métricas utilizadas. Debido a su bajo coste computacional, ROUGE y BLEU tienen debilidades. Ambas métricas se basan en la comparación de n-gramas y, por lo tanto, no capturan el significado del texto generado. Además, no son sensibles a la fluidez, la gramática o la creatividad del lenguaje, lo que puede llevar a puntuaciones que no coinciden con las evaluaciones humanas.
-
-- Si se confía en las pruebas realizadas por los autores de la versión con fine-tuning, esta mejora las prestaciones del modelo base, tal y como se puede ver en su [ficha](https://huggingface.co/DISLab/SummLlama3.2-3B#human-evaluation) de Hugging Face.
-
-- Trabajo futuro: probar más muestras y probar otras métricas que solucionan los problemas de ROUGE y BLEU a cambio de tener un mayor coste computacional (e.g., G-Eval).
+Si se analizan los resultados de BERT score:
+- Se observa que los modelos ```meta-llama/Llama-3.2-3B-Instruct``` y ```DISLab/SummLlama3.2-3B``` son mejores que ```facebook/bart-large-cnn```. Esto puede deberse a que los dos primeros modelos cuentan con 3.21B de parámetros respecto a los 406M del último. Aunque el número de parámetros no asegura automáticamente mejores resultados, generalmente sí contribuye a un mejor desempeño.
+- Se observa que ```DISLab/SummLlama3.2-3B``` es mejor que ```meta-llama/Llama-3.2-3B-Instruct```. Esto tiene sentido ya que el primer modelo ha sido especializado en resumir, mientras que el segundo no.
