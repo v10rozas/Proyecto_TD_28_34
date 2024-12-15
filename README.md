@@ -141,17 +141,52 @@ Sobre la validación y la evaluación:
 - Se ha establecido que para validar los parámetros y evaluar la red neuronal la métrica empleada sea el MAE (Mean Absolute Error) porque proporciona una medida más interpretable de los errores del modelo.
 
 #### Análisis de los resultados
+Primero, se entrenó, validó y evaluó el perceptrón simple. Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
 
 |                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
 |-----------------------------------|-------------------|-------------------|-------------------|
 | **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
-| Perceptrón simple + lr=0.01       | ~0.83             | ~0.86             | ~0.86             |
-| Perceptrón multicapa + lr=0.01    | ~0.79             | ~0.86             | ~0.85             |
-| MLP + lr=0.1                      | ~0.9              | ~0.9              | ~0.9              | 
-| MLP + lr=0.01                     | ~0.79             | ~0.86             | ~0.85             |
-| MLP + lr=0.001                    | ~0.84             | ~0.88             | ~0.88             |
-| MLP + lr=0.01 + dropout           | ~0.89             | ~0.87             | ~0.89             |
-| MLP + lr=0.01 + early stopping    | ~0.83             | ~0.85             | ~0.83             |
+| Perceptrón simple + lr=0.01       | 0.95              | **0.85**          | 0.88              |
+
+De esta tabla se puede concluir que la mejor vectorización es TF-IDF. No obstante, el perceptrón simple es un regresor que, debido a su naturaleza lineal, no capta de manera adecuada las relaciones no lineales que pueden existir en los datos.
+
+Entonces, se entrenó, validó y evaluó un perceptrón multicapa que consta de una única capa oculta y una función de activación ReLU. El número de neuronas de la capa oculta se corresponde, aproximadamente, con 2/3 del número total de características, tal y como se menciona [aquí](https://medium.com/geekculture/introduction-to-neural-network-2f8b8221fbd3). Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
+| Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | **0.92**          |
+
+De esta tabla se puede concluir que la mejor vectorización para el perceptrón multicapa es Word2Vec. Sin embargo, se observa que las prestaciones al añadir nuevas capas son peores que las obtenidas en el perceptrón simple. Por este motivo, se probaron diferentes valores de tasa de aprendizaje (0.001, 0.0055, 0.055 y 0.1) para intentar mejorar las métricas. Los resultados obtenidos sobre el conjunto de pruebas se muestran en la siguiente tabla.
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | 0.95              | 0.85              | 0.88              |
+| Perceptrón multicapa + lr=0.001   | **0.89**          | **0.86**          | **0.88**          |
+| Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
+| Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
+| Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
+| Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
+
+
+
+|                                   | **Embeddings**    | **TF-IDF**        | **Word2Vec**      |
+|-----------------------------------|-------------------|-------------------|-------------------|
+| **Red Neuronal**                  | **MAE (pruebas)** | **MAE (pruebas)** | **MAE (pruebas)** |
+| Perceptrón simple + lr=0.01       | **0.95**          | **0.85**          | **0.88**          |
+| Perceptrón multicapa + lr=0.001   | **0.89**          | **0.86**          | **0.88**          |
+| Perceptrón multicapa + lr=0.0055  | 0.98              | 0.98              | 0.89              |
+| Perceptrón multicapa + lr=0.01    | 1.03              | 1.11              | 0.92              |
+| Perceptrón multicapa + lr=0.055   | 0.93              | 0.97              | 1.13              |
+| Perceptrón multicapa + lr=0.1     | 1.06              | 0.87              | 1.04              |
+| MLP + lr=0.1 + dropout            | -                 | 0.91              | -                 |
+| MLP + lr=0.0055 + dropout         | -                 | -                 | **0.85**          |
+| MLP + lr=0.001 + dropout          | **0.89**          | -                 | -                 |
+| MLP + lr=0.001 + es               | -                 | 0.91              | -                 |
+| MLP + lr=0.0055 + dropout + es    | -                 | -                 | 0.92              |
+| MLP + lr=0.001 + dropout + es     | 0.89              | -                 | -                 |
 
 ### Regresor k-NN
 #### Hoja de ruta
