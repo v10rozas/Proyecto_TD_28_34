@@ -315,33 +315,37 @@ piped into glasses and topped with fresh mint before serving.
     
 
 RESUMEN GENERADO POR meta-llama/Llama-3.2-3B-Instruct:
-The document is a recipe for a peach mousse dessert. Here's a summary of the
-steps involved:
+The document is a recipe for a dessert, likely a type of mousse or cake, that
+incorporates dried peaches and Pêcher Mignon (likely cherry liqueur). Here's
+a summary of the steps involved:
 
-1. Make a peach mixture by combining dried peaches and water, letting it sit,
-then boiling and reducing heat to simmer until the peaches are soft. Add gelatin
-and any remaining ingredients to the mixture and puree until smooth.
+1. Soak dried peaches in water for 30 minutes and then cook them until they're
+soft.
+2. Soften gelatin by sprinkling it in cold water.
+3. Begin preparing the custard by beating egg yolks, sugar, and gelatin (after
+it's softened) in a double boiler.
+4. Puree the custard to create a smooth mixture.
+5. Combine the pureed custard with the cooked and pureed peaches.
+6. Beat the cream until soft peaks form, then fold it into the peach mixture to
+lighten it.
+7. Beat the egg whites and cream of tartar, then fold in the egg whites to add
+structure and gloss to the mousse.
+8. Refrigerate the mousse for at least 8 hours or overnight to allow it to set.
+9. Pipe the mousse into delicate forms, such as goblets or wine glasses, and top
+with fresh mint sprigs before serving.
 
-2. Prepare a custard mixture by beating egg yolks, sugar, and Pêcher Mignon in
-a double boiler until thickened.
-
-3. Combine the peach mixture with the custard mixture and add whipped cream to
-lighten the mixture.
-
-4. Whip egg whites and cream of tartar, then gently fold into the peach mixture.
-
-5. Cover the bowl with plastic and refrigerate the mousse for at least 8 hours
-or overnight.
-
-6. Pipe the mousse into goblets or wine glasses and top with fresh mint sprigs
-before serving.
+The recipe likely results in a light, airy, and flavorful dessert perfect for
+special occasions.
 
 
 RESUMEN GENERADO POR DISLab/SummLlama3.2-3B:
-The recipe described is for a peach mousse, involving the preparation of a peach
-puree, the creation of a custard base, and the folding of whipped cream and egg
-whites to combine, all of which are then piped into pastry bags and set to chill
-in the refrigerator before serving, garnished with fresh mint sprigs.
+This recipe describes a peach mousse, involving the preparation of a soft peach
+puree, the mixing of the puree with egg yolks and cream, and the folding of whipped
+cream and egg whites to create a light and airy texture. The process begins by
+softening dried peaches in water, then pureeing them with a gelatin mixture and
+egg yolks in a double boiler. The mixture is then cooled, combined with whipped
+cream, and folded to incorporate air. The mousse is then refrigerated for at least
+8 hours and piped into goblets or wine glasses, finished with fresh mint sprigs.
 
 
 RESUMEN GENERADO POR facebook/bart-large-cnn:
